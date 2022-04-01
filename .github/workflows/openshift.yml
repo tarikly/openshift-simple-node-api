@@ -46,7 +46,7 @@ env:
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
   # ⬇️ EDIT with the port your application should be accessible on.
-  APP_PORT: 8080
+  APP_PORT: 80
 
   # ⬇️ EDIT if you wish to set the kube context's namespace after login. Leave blank to use the default namespace.
   OPENSHIFT_NAMESPACE: ""
