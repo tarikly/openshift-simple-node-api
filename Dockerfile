@@ -29,8 +29,8 @@ COPY . .
 
 ENV PATH="$PATH:/app/node_modules/.bin"
 ENV NODE_ENV production
-ENV PORT 8080
+ENV PORT 8000
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["node", "."]
