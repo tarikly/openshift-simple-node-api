@@ -1,36 +1,24 @@
-ARG NODE_VERSION=14
+# Use the official Node 8 image.
+# https://hub.docker.com/_/node 
+FROM node 
 
-###
-# 1. Dependencies
-###
+# Create and change to the app directory.
+WORKDIR /usr/src/app
 
-FROM node:${NODE_VERSION}-slim as dependencies
-WORKDIR /app
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure both package.json AND package-lock.json are copied.
+# Copying this separately prevents re-running npm install on every code change.
+COPY package*.json ./
 
-RUN apt-get update
-RUN apt-get install -y build-essential python
-RUN npm install --global npm node-gyp
+# Install production dependencies.
+RUN npm install --only=production
 
-COPY package.json *package-lock.json *.npmrc ./
-
-ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV}
-RUN npm ci
-
-###
-# 2. Application
-###
-
-FROM node:${NODE_VERSION}-slim
-WORKDIR /app
-
-COPY --from=dependencies /app/node_modules node_modules
+# Copy local code to the container image.
 COPY . .
 
-ENV PATH="$PATH:/app/node_modules/.bin"
-ENV NODE_ENV production
-ENV PORT 8000
+# Configure and document the service HTTP port.
+ENV PORT 8080
+EXPOSE $PORT
 
-EXPOSE 8000
-
-CMD ["node", "."]
+# Run the web service on container startup.
+CMD [ "node", "index.js" ]
